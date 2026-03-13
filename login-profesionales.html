@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso Profesionales | Salud Sin Límites</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --primary: #005A8C;
+      --secondary: #E8433A;
+      --bg: #f4f6f8;
+      --surface: #ffffff;
+      --text: #333333;
+      --border: #e0e0e0;
+      --error: #E8433A;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: var(--text);
+    }
+    .login-container {
+      background-color: var(--surface);
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .login-header h2 {
+      color: var(--primary);
+      margin: 0 0 10px 0;
+    }
+    .login-header p {
+      color: #666;
+      margin: 0;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    .password-container {
+      position: relative;
+    }
+    .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+    }
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .btn-login:hover {
+      background-color: #00426b;
+    }
+    .error-message {
+      color: var(--error);
+      text-align: center;
+      margin-bottom: 15px;
+      display: none;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #666;
+    }
+    .tab.active {
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: var(--primary);
+      text-decoration: none;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-header">
+    <h2>Salud Sin Límites</h2>
+    <p>Acceso a Profesionales</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" id="tabLogin" onclick="switchTab('login')">Iniciar Sesión</div>
+    <div class="tab" id="tabRegister" onclick="switchTab('register')">Registrarse</div>
+  </div>
+
+  <div id="errorMessage" class="error-message"></div>
+
+  <!-- Formulario de Login -->
+  <form id="loginForm" onsubmit="handleLogin(event)">
+    <div class="form-group">
+      <label for="loginUsername">Usuario</label>
+      <input type="text" id="loginUsername" required>
+    </div>
+    <div class="form-group">
+      <label for="loginPassword">Contraseña</label>
+      <div class="password-container">
+        <input type="password" id="loginPassword" required>
+        <button type="button" class="toggle-password" onclick="toggleVisibility('loginPassword', 'eyeIconLogin')">
+          <span id="eyeIconLogin">👁️</span>
+        </button>
+      </div>
+    </div>
+    <button type="submit" class="btn-login">Ingresar</button>
+  </form>
+
+  <!-- Formulario de Registro -->
+  <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
+    <div class="form-group">
+      <label for="registerUsername">Nuevo Usuario</label>
+      <input type="text" id="registerUsername" required>
+    </div>
+    <div class="form-group">
+      <label for="registerPassword">Contraseña</label>
+      <div class="password-container">
+        <input type="password" id="registerPassword" required>
+        <button type="button" class="toggle-password" onclick="toggleVisibility('registerPassword', 'eyeIconReg')">
+          <span id="eyeIconReg">👁️</span>
+        </button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="confirmPassword">Confirmar Contraseña</label>
+      <div class="password-container">
+        <input type="password" id="confirmPassword" required>
+        <button type="button" class="toggle-password" onclick="toggleVisibility('confirmPassword', 'eyeIconConf')">
+          <span id="eyeIconConf">👁️</span>
+        </button>
+      </div>
+    </div>
+    <button type="submit" class="btn-login">Crear Cuenta</button>
+  </form>
+
+  <a href="salud-sin-limites-v5.html" class="back-link">← Volver al Inicio</a>
+</div>
+
+<script>
+  // Inicializar Supabase
+  const SUPABASE_URL = 'https://tfnkttndirngwndzndbj.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_KFrHhQ0wyhX8RZ9UlcMxHA_IQrwOu67';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  function toggleVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (input.type === "password") {
+      input.type = "text";
+      icon.textContent = "🙈";
+    } else {
+      input.type = "password";
+      icon.textContent = "👁️";
+    }
+  }
+
+  function switchTab(tab) {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const tabLogin = document.getElementById('tabLogin');
+    const tabRegister = document.getElementById('tabRegister');
+    const errorMessage = document.getElementById('errorMessage');
+    
+    errorMessage.style.display = 'none';
+
+    if (tab === 'login') {
+      loginForm.style.display = 'block';
+      registerForm.style.display = 'none';
+      tabLogin.classList.add('active');
+      tabRegister.classList.remove('active');
+    } else {
+      loginForm.style.display = 'none';
+      registerForm.style.display = 'block';
+      tabLogin.classList.remove('active');
+      tabRegister.classList.add('active');
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('errorMessage');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    const user = document.getElementById('loginUsername').value;
+    const pass = document.getElementById('loginPassword').value;
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('admin_users')
+        .select('*')
+        .eq('username', user)
+        .eq('password', pass)
+        .maybeSingle();
+
+      if (error || !data) {
+        showError('Usuario o contraseña incorrectos.');
+      } else {
+        // Redirigir al panel de administración
+        localStorage.setItem('adminAuthenticated', 'true');
+        window.location.href = 'admin-panel.html';
+      }
+    } catch (err) {
+      showError('Error de conexión con la base de datos.');
+    }
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    const user = document.getElementById('registerUsername').value;
+    const pass = document.getElementById('registerPassword').value;
+    const confPass = document.getElementById('confirmPassword').value;
+
+    if (pass !== confPass) {
+      showError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    try {
+      // Verificar si el usuario ya existe
+      const { data: existingUser } = await supabaseClient
+        .from('admin_users')
+        .select('*')
+        .eq('username', user)
+        .maybeSingle();
+
+      if (existingUser) {
+        showError('El nombre de usuario ya está registrado.');
+        return;
+      }
+
+      // Crear nuevo usuario
+      const { error } = await supabaseClient
+        .from('admin_users')
+        .insert([{ username: user, password: pass }]);
+
+      if (error) {
+        showError('Error al registrar el usuario.');
+      } else {
+        alert('Usuario registrado exitosamente. Ahora puede iniciar sesión.');
+        switchTab('login');
+      }
+    } catch (err) {
+      showError('Error de conexión.');
+    }
+  }
+</script>
+
+</body>
+</html>

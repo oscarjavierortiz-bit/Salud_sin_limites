@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Administrativo — Salud Sin Límites</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:#1A3A8F; --blue-dark:#0f2260; --blue-light:#2B5FD9;
+  --red:#E8433A; --green:#28a870; --orange:#f59e0b; --purple:#7c3aed;
+  --white:#fff; --gray-50:#f8f9fb; --gray-100:#eef0f5;
+  --gray-200:#d6dae6; --gray-600:#5a6380; --gray-800:#1e2340;
+  --sidebar-w:240px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gray-50);color:var(--gray-800);display:flex;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--blue-dark);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;
+  z-index:50;
+  box-shadow:4px 0 24px rgba(0,0,0,.18);
+}
+.sidebar-logo{
+  padding:1.4rem 1.2rem;
+  border-bottom:1px solid rgba(255,255,255,.1);
+  display:flex;align-items:center;gap:.7rem;
+}
+.sidebar-logo-icon{
+  width:36px;height:36px;background:var(--red);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
+}
+.sidebar-logo-text h2{
+  font-family:'Oswald',sans-serif;font-size:.95rem;font-weight:600;
+  color:#fff;letter-spacing:.06em;text-transform:uppercase;line-height:1;
+}
+.sidebar-logo-text span{font-size:.68rem;color:rgba(255,255,255,.5);letter-spacing:.04em;}
+
+.sidebar-role{
+  margin:.8rem 1rem;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:.7rem .9rem;
+  display:flex;align-items:center;gap:.7rem;
+}
+.role-avatar{
+  width:34px;height:34px;background:var(--blue-light);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
+}
+.role-info h4{font-size:.82rem;font-weight:600;color:#fff;}
+.role-info span{font-size:.7rem;color:rgba(255,255,255,.5);}
+
+.sidebar-nav{flex:1;overflow-y:auto;padding:.5rem 0;}
+.nav-group-label{
+  font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);padding:.9rem 1.2rem .3rem;
+}
+.nav-item{
+  display:flex;align-items:center;gap:.7rem;
+  padding:.65rem 1.2rem;cursor:pointer;
+  font-size:.88rem;font-weight:500;color:rgba(255,255,255,.65);
+  transition:all .2s;border-left:3px solid transparent;
+  text-decoration:none;
+}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.07);}
+.nav-item.active{color:#fff;background:rgba(255,255,255,.1);border-left-color:var(--red);}
+.nav-icon{font-size:1rem;width:20px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:10px;}
+
+.sidebar-footer{padding:1rem 1.2rem;border-top:1px solid rgba(255,255,255,.08);}
+.sidebar-footer .nav-item{padding:.6rem 0;border-left:none;}
+
+/* ── MAIN ── */
+.main{margin-left:var(--sidebar-w);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{
+  background:#fff;border-bottom:1px solid var(--gray-200);
+  padding:.85rem 1.8rem;display:flex;align-items:center;gap:1rem;
+  position:sticky;top:0;z-index:40;
+  box-shadow:0 2px 8px rgba(26,58,143,.06);
+}
+.topbar-title{
+  font-family:'Oswald',sans-serif;font-size:1.2rem;font-weight:600;
+  color:var(--blue-dark);letter-spacing:.04em;text-transform:uppercase;flex:1;
+}
+.topbar-search{
+  display:flex;align-items:center;gap:.5rem;
+  background:var(--gray-50);border:1px solid var(--gray-200);
+  border-radius:8px;padding:.45rem .9rem;
+  font-size:.85rem;color:var(--gray-600);
+  width:240px;
+}
+.topbar-search input{border:none;background:transparent;outline:none;font-size:.85rem;color:var(--gray-800);width:100%;font-family:'DM Sans',sans-serif;}
+.topbar-actions{display:flex;align-items:center;gap:.6rem;}
+.icon-btn{
+  width:36px;height:36px;border-radius:8px;border:1px solid var(--gray-200);
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:1rem;cursor:pointer;transition:all .2s;position:relative;
+}
+.icon-btn:hover{background:var(--gray-50);border-color:var(--blue-light);}
+.notif-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid #fff;}
+
+/* ── CONTENT ── */
+.content{padding:1.8rem;flex:1;}
+
+/* Panels - show/hide */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ── STAT CARDS ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;margin-bottom:1.8rem;}
+.stat-card{
+  background:#fff;border:1px solid var(--gray-200);border-radius:12px;
+  padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1rem;
+  transition:all .25s;
+}
+.stat-card:hover{box-shadow:0 8px 24px rgba(26,58,143,.1);transform:translateY(-2px);}
+.stat-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;
+}
+.si-blue{background:rgba(26,58,143,.1);}
+.si-red{background:rgba(232,67,58,.1);}
+.si-green{background:rgba(40,168,112,.1);}
+.si-orange{background:rgba(245,158,11,.1);}
+.stat-info h3{font-size:1.7rem;font-weight:700;color:var(--gray-800);line-height:1;}
+.stat-info p{font-size:.78rem;color:var(--gray-600);margin-top:.2rem;}
+.stat-trend{font-size:.72rem;font-weight:600;margin-top:.3rem;}
+.trend-up{color:var(--green);}
+.trend-down{color:var(--red);}
+
+/* ── GRID 2 COL ── */
+.grid-2{display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+.grid-2b{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.2rem;}
+
+/* ── CARD ── */
+.card{background:#fff;border:1px solid var(--gray-200);border-radius:12px;overflow:hidden;}
+.card-header{
+  padding:1rem 1.4rem;border-bottom:1px solid var(--gray-100);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-header h3{
+  font-family:'Oswald',sans-serif;font-size:1rem;font-weight:600;
+  color:var(--blue-dark);letter-spacing:.04em;text-transform:uppercase;
+}
+.card-body{padding:1.2rem 1.4rem;}
+.card-action{
+  font-size:.78rem;font-weight:600;color:var(--blue-light);
+  text-decoration:none;cursor:pointer;letter-spacing:.02em;
+}
+
+/* ── TABLE ── */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{
+  text-align:left;font-size:.72rem;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--gray-600);padding:.7rem 1rem;
+  border-bottom:2px solid var(--gray-100);
+}
+td{padding:.75rem 1rem;font-size:.88rem;border-bottom:1px solid var(--gray-50);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:var(--gray-50);}
+
+/* Status badges */
+.badge{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:.25rem .6rem;border-radius:20px;}
+.badge-green{background:rgba(40,168,112,.12);color:#1a7a50;}
+.badge-red{background:rgba(232,67,58,.12);color:#b83030;}
+.badge-orange{background:rgba(245,158,11,.12);color:#b07000;}
+.badge-blue{background:rgba(43,95,217,.12);color:#1a3a8f;}
+.badge-gray{background:var(--gray-100);color:var(--gray-600);}
+
+/* Avatar row */
+.avatar{
+  width:32px;height:32px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.user-cell{display:flex;align-items:center;gap:.7rem;}
+.user-name{font-weight:600;font-size:.88rem;}
+.user-sub{font-size:.72rem;color:var(--gray-600);}
+
+/* ── APPOINTMENT TIMELINE ── */
+.timeline{display:flex;flex-direction:column;gap:.8rem;}
+.appt-item{
+  display:flex;align-items:center;gap:1rem;
+  padding:.8rem;border-radius:8px;border:1px solid var(--gray-100);
+  transition:background .2s;cursor:pointer;
+}
+.appt-item:hover{background:var(--gray-50);}
+.appt-time{
+  font-family:'Oswald',sans-serif;font-size:.9rem;font-weight:600;
+  color:var(--blue-dark);min-width:52px;text-align:center;line-height:1.1;
+}
+.appt-time span{display:block;font-size:.65rem;color:var(--gray-600);font-family:'DM Sans',sans-serif;font-weight:400;}
+.appt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.appt-info{flex:1;}
+.appt-patient{font-weight:600;font-size:.88rem;}
+.appt-type{font-size:.75rem;color:var(--gray-600);}
+.appt-dr{font-size:.75rem;color:var(--blue-light);font-weight:500;}
+
+/* ── CHARTS placeholder ── */
+.chart-area{height:180px;background:var(--gray-50);border-radius:8px;display:flex;align-items:flex-end;padding:1rem;gap:.6rem;overflow:hidden;}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:.3rem;}
+.bar{width:100%;border-radius:4px 4px 0 0;transition:height .5s;}
+.bar-label{font-size:.65rem;color:var(--gray-600);}
+.bar-val{font-size:.68rem;font-weight:700;color:var(--blue-dark);}
+
+/* Mini donut */
+.donut-wrap{display:flex;align-items:center;gap:1.2rem;}
+.donut-legend{display:flex;flex-direction:column;gap:.5rem;}
+.legend-item{display:flex;align-items:center;gap:.5rem;font-size:.8rem;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+
+/* ── FORM STYLES ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:.4rem;}
+.form-group label{font-size:.78rem;font-weight:600;color:var(--gray-600);letter-spacing:.03em;}
+.form-group input,.form-group select,.form-group textarea{
+  border:1px solid var(--gray-200);border-radius:8px;padding:.6rem .9rem;
+  font-size:.88rem;font-family:'DM Sans',sans-serif;outline:none;
+  transition:border-color .2s;background:#fff;
+}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--blue-light);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-full{grid-column:1/-1;}
+.btn-sm{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'Oswald',sans-serif;font-size:.85rem;font-weight:500;
+  letter-spacing:.05em;text-transform:uppercase;
+  padding:.55rem 1.2rem;border-radius:6px;cursor:pointer;border:none;
+  transition:all .2s;text-decoration:none;
+}
+.btn-primary-sm{background:var(--blue);color:#fff;}
+.btn-primary-sm:hover{background:var(--blue-dark);}
+.btn-red-sm{background:var(--red);color:#fff;}
+.btn-red-sm:hover{background:#c03030;}
+.btn-ghost-sm{background:transparent;color:var(--gray-600);border:1px solid var(--gray-200);}
+.btn-ghost-sm:hover{background:var(--gray-100);}
+.btn-green-sm{background:var(--green);color:#fff;}
+
+/* Staff card grid */
+.staff-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;}
+.staff-card{
+  background:#fff;border:1px solid var(--gray-200);border-radius:12px;
+  overflow:hidden;transition:all .3s;cursor:pointer;
+}
+.staff-card:hover{box-shadow:0 8px 30px rgba(26,58,143,.12);transform:translateY(-4px);}
+.staff-photo-area{
+  height:130px;display:flex;align-items:flex-end;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.staff-info-area{padding:1rem 1.1rem 1.2rem;}
+.staff-name{font-family:'Oswald',sans-serif;font-size:1rem;font-weight:600;color:var(--blue-dark);letter-spacing:.04em;text-transform:uppercase;}
+.staff-specialty{font-size:.75rem;color:var(--red);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin:.15rem 0 .5rem;}
+.staff-meta{display:flex;gap:.6rem;flex-wrap:wrap;}
+.staff-tag{font-size:.7rem;background:var(--gray-100);color:var(--gray-600);padding:.2rem .5rem;border-radius:4px;}
+.staff-actions{display:flex;gap:.5rem;margin-top:.8rem;}
+
+/* Notification list */
+.notif-list{display:flex;flex-direction:column;}
+.notif-item{
+  display:flex;gap:.9rem;padding:.9rem 1.4rem;
+  border-bottom:1px solid var(--gray-50);transition:background .2s;cursor:pointer;
+}
+.notif-item:hover{background:var(--gray-50);}
+.notif-item.unread{background:rgba(43,95,217,.03);}
+.notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.notif-text p{font-size:.85rem;font-weight:500;color:var(--gray-800);}
+.notif-text span{font-size:.72rem;color:var(--gray-600);}
+.notif-unread-dot{width:8px;height:8px;background:var(--blue-light);border-radius:50%;margin-top:.4rem;flex-shrink:0;}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--gray-100);margin-bottom:1.2rem;}
+.tab{
+  font-family:'Oswald',sans-serif;font-size:.85rem;font-weight:500;
+  letter-spacing:.04em;text-transform:uppercase;
+  padding:.65rem 1.2rem;cursor:pointer;color:var(--gray-600);
+  border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;
+}
+.tab:hover{color:var(--blue);}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+
+/* Calendar mini */
+.mini-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:.8rem;}
+.cal-day-name{text-align:center;font-size:.62rem;font-weight:700;color:var(--gray-600);letter-spacing:.04em;padding:.3rem 0;}
+.cal-day{
+  text-align:center;font-size:.78rem;padding:.35rem;border-radius:6px;cursor:pointer;
+  transition:all .2s;
+}
+.cal-day:hover{background:var(--gray-100);}
+.cal-day.today{background:var(--blue);color:#fff;font-weight:700;}
+.cal-day.has-appt{background:rgba(232,67,58,.12);color:var(--red);font-weight:600;}
+.cal-day.other-month{color:var(--gray-200);}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;}
+.cal-nav h4{font-family:'Oswald',sans-serif;font-size:.92rem;font-weight:600;color:var(--blue-dark);letter-spacing:.04em;text-transform:uppercase;}
+.cal-arrow{background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--gray-600);padding:.2rem .4rem;}
+
+/* Progress bar */
+.progress-bar{height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;transition:width .5s;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ SIDEBAR ═══════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-icon">❤️</div>
+    <div class="sidebar-logo-text">
+      <h2>Salud Sin Límites</h2>
+      <span>Panel Administrativo</span>
+    </div>
+  </div>
+
+  <div class="sidebar-role">
+    <div class="role-avatar">👩‍⚕️</div>
+    <div class="role-info">
+      <h4>Dra. Camila Torres</h4>
+      <span>Jefa de Enfermería</span>
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-group-label">Principal</div>
+    <a class="nav-item active" onclick="showPanel('dashboard')">
+      <span class="nav-icon">📊</span> Dashboard
+    </a>
+    <a class="nav-item" onclick="showPanel('citas')">
+      <span class="nav-icon">📅</span> Citas del Día
+      <span class="nav-badge">12</span>
+    </a>
+    <a class="nav-item" onclick="showPanel('pacientes')">
+      <span class="nav-icon">👥</span> Pacientes
+    </a>
+    <a class="nav-item" onclick="showPanel('personal')">
+      <span class="nav-icon">🏥</span> Personal Médico
+    </a>
+
+    <div class="nav-group-label">Gestión</div>
+    <a class="nav-item" onclick="showPanel('examenes')">
+      <span class="nav-icon">🧪</span> Exámenes & Labs
+      <span class="nav-badge" style="background:var(--orange);color:#fff;">5</span>
+    </a>
+    <a class="nav-item" onclick="showPanel('historia')">
+      <span class="nav-icon">📋</span> Historia Clínica
+    </a>
+    <a class="nav-item" onclick="showPanel('inventario')">
+      <span class="nav-icon">💊</span> Inventario
+    </a>
+    <a class="nav-item" onclick="showPanel('reportes')">
+      <span class="nav-icon">📈</span> Reportes
+    </a>
+
+    <div class="nav-group-label">Sistema</div>
+    <a class="nav-item" onclick="showPanel('notif')">
+      <span class="nav-icon">🔔</span> Notificaciones
+      <span class="nav-badge">3</span>
+    </a>
+    <a class="nav-item" onclick="showPanel('config')">
+      <span class="nav-icon">⚙️</span> Configuración
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <a class="nav-item" href="salud-sin-limites-v5.html" style="color:rgba(255,255,255,.5);font-size:.82rem;">
+      <span class="nav-icon">🌐</span> Ver sitio web
+    </a>
+    <a class="nav-item" style="color:rgba(255,255,255,.5);font-size:.82rem;cursor:pointer;" onclick="logout()">
+      <span class="nav-icon">🚪</span> Cerrar sesión
+    </a>
+  </div>
+</aside>
+
+<!-- ═══════════════════ MAIN ═══════════════════ -->
+<main class="main">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <h1 class="topbar-title" id="pageTitle">Dashboard General</h1>
+    <div class="topbar-search">
+      <span>🔍</span>
+      <input type="text" placeholder="Buscar paciente, cita...">
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" onclick="showPanel('notif')">
+        🔔<span class="notif-dot"></span>
+      </button>
+      <button class="icon-btn">💬</button>
+      <button class="icon-btn">👤</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ══════════ DASHBOARD ══════════ -->
+    <div id="panel-dashboard" class="panel active">
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon si-blue">📅</div>
+          <div class="stat-info">
+            <h3>24</h3>
+            <p>Citas hoy</p>
+            <div class="stat-trend trend-up">↑ 4 más que ayer</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-green">👥</div>
+          <div class="stat-info">
+            <h3>1,482</h3>
+            <p>Pacientes activos</p>
+            <div class="stat-trend trend-up">↑ 38 este mes</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-orange">⏳</div>
+          <div class="stat-info">
+            <h3>7</h3>
+            <p>En sala de espera</p>
+            <div class="stat-trend trend-down">↑ 2 urgentes</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon si-red">🧪</div>
+          <div class="stat-info">
+            <h3>18</h3>
+            <p>Exámenes pendientes</p>
+            <div class="stat-trend" style="color:var(--orange);">⚠ 5 resultados listos</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <!-- Chart -->
+        <div class="card">
+          <div class="card-header">
+            <h3>📊 Atenciones por Servicio — Marzo 2025</h3>
+            <span class="card-action">Ver reporte →</span>
+          </div>
+          <div class="card-body">
+            <div class="chart-area" id="barChart"></div>
+          </div>
+        </div>
+
+        <!-- Mini Calendar -->
+        <div class="card">
+          <div class="card-header"><h3>📆 Calendario</h3></div>
+          <div class="card-body">
+            <div class="cal-nav">
+              <button class="cal-arrow">◀</button>
+              <h4>Marzo 2025</h4>
+              <button class="cal-arrow">▶</button>
+            </div>
+            <div class="mini-cal" id="miniCal"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2b">
+        <!-- Today appointments -->
+        <div class="card">
+          <div class="card-header">
+            <h3>🗓 Citas de Hoy</h3>
+            <span class="card-action" onclick="showPanel('citas')">Ver todas →</span>
+          </div>
+          <div class="card-body" style="padding:0.8rem 0.6rem;">
+            <div class="timeline">
+              <div class="appt-item">
+                <div class="appt-time">07:30<span>am</span></div>
+                <div class="appt-dot" style="background:var(--green)"></div>
+                <div class="appt-info">
+                  <div class="appt-patient">María González</div>
+                  <div class="appt-type">Consulta Médico General</div>
+                  <div class="appt-dr">Dr. Andrés Medina</div>
+                </div>
+                <span class="badge badge-green">Atendido</span>
+              </div>
+              <div class="appt-item">
+                <div class="appt-time">08:15<span>am</span></div>
+                <div class="appt-dot" style="background:var(--blue-light)"></div>
+                <div class="appt-info">
+                  <div class="appt-patient">Carlos Ruiz</div>
+                  <div class="appt-type">Examen de Sangre</div>
+                  <div class="appt-dr">Laboratorio Central</div>
+                </div>
+                <span class="badge badge-blue">En proceso</span>
+              </div>
+              <div class="appt-item">
+                <div class="appt-time">09:00<span>am</span></div>
+                <div class="appt-dot" style="background:var(--orange)"></div>
+                <div class="appt-info">
+                  <div class="appt-patient">Laura Martínez</div>
+                  <div class="appt-type">Sesión Psicología</div>
+                  <div class="appt-dr">Dra. Valentina Ríos</div>
+                </div>
+                <span class="badge badge-orange">Esperando</span>
+              </div>
+              <div class="appt-item">
+                <div class="appt-time">09:45<span>am</span></div>
+                <div class="appt-dot" style="background:var(--gray-200)"></div>
+                <div class="appt-info">
+                  <div class="appt-patient">Andrés Ospina</div>
+                  <div class="appt-type">Limpieza Dental</div>
+                  <div class="appt-dr">Dr. Felipe Arango</div>
+                </div>
+                <span class="badge badge-gray">Pendiente</span>
+              </div>
+              <div class="appt-item">
+                <div class="appt-time">10:30<span>am</span></div>
+                <div class="appt-dot" style="background:var(--gray-200)"></div>
+                <div class="appt-info">
+                  <div class="appt-patient">Sofía Herrera</div>
+                  <div class="appt-type">Control Enfermería</div>
+                  <div class="appt-dr">Dra. Camila Torres</div>
+                </div>
+                <span class="badge badge-gray">Pendiente</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Services donut + recent patients -->
+        <div class="card">
+          <div class="card-header"><h3>📋 Distribución Servicios</h3></div>
+          <div class="card-body">
+            <div class="donut-wrap" style="margin-bottom:1.2rem;">
+              <svg viewBox="0 0 100 100" style="width:100px;height:100px;flex-shrink:0;">
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#eef0f5" stroke-width="14"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#1A3A8F" stroke-width="14" stroke-dasharray="95 144" stroke-dashoffset="0" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#28a870" stroke-width="14" stroke-dasharray="52 187" stroke-dashoffset="-95" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#E8433A" stroke-width="14" stroke-dasharray="34 205" stroke-dashoffset="-147" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#f59e0b" stroke-width="14" stroke-dasharray="22 217" stroke-dashoffset="-181" stroke-linecap="round"/>
+                <circle cx="50" cy="50" r="38" fill="none" stroke="#7c3aed" stroke-width="14" stroke-dasharray="36 203" stroke-dashoffset="-203" stroke-linecap="round"/>
+                <text x="50" y="54" text-anchor="middle" font-size="12" font-weight="700" fill="#1e2340">239</text>
+              </svg>
+              <div class="donut-legend">
+                <div class="legend-item"><div class="legend-dot" style="background:#1A3A8F"></div>Médico General <strong>40%</strong></div>
+                <div class="legend-item"><div class="legend-dot" style="background:#28a870"></div>Enfermería <strong>22%</strong></div>
+                <div class="legend-item"><div class="legend-dot" style="background:#E8433A"></div>Odontología <strong>14%</strong></div>
+                <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div>Psicología <strong>9%</strong></div>
+                <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Exámenes <strong>15%</strong></div>
+              </div>
+            </div>
+            <!-- Capacity bars -->
+            <div style="display:flex;flex-direction:column;gap:.7rem;">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:.3rem;"><span>Sala de espera</span><strong>7 / 20</strong></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:35%;background:var(--green)"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:.3rem;"><span>Consultorios ocupados</span><strong>4 / 5</strong></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--orange)"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:.75rem;margin-bottom:.3rem;"><span>Insumos críticos</span><strong>62%</strong></div>
+                <div class="progress-bar"><div class="progress-fill" style="width:62%;background:var(--blue-light)"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ CITAS ══════════ -->
+    <div id="panel-citas" class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
+        <div class="tabs" style="margin-bottom:0;">
+          <div class="tab active">Hoy (12)</div>
+          <div class="tab">Esta semana</div>
+          <div class="tab">Pendientes</div>
+          <div class="tab">Canceladas</div>
+        </div>
+        <button class="btn-sm btn-primary-sm" onclick="showPanel('nueva-cita')">+ Nueva Cita</button>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Hora</th><th>Paciente</th><th>Servicio</th><th>Médico</th><th>Estado</th><th>Acciones</th>
+              </tr></thead>
+              <tbody id="citasTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ NUEVA CITA ══════════ -->
+    <div id="panel-nueva-cita" class="panel">
+      <div style="margin-bottom:1.2rem;">
+        <button class="btn-sm btn-ghost-sm" onclick="showPanel('citas')">← Volver</button>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>📅 Registrar Nueva Cita</h3></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nombre del Paciente</label>
+              <input type="text" placeholder="Ej: María González">
+            </div>
+            <div class="form-group">
+              <label>Cédula / Documento</label>
+              <input type="text" placeholder="Número de documento">
+            </div>
+            <div class="form-group">
+              <label>Fecha</label>
+              <input type="date">
+            </div>
+            <div class="form-group">
+              <label>Hora</label>
+              <input type="time">
+            </div>
+            <div class="form-group">
+              <label>Servicio</label>
+              <select>
+                <option>Médico General</option>
+                <option>Enfermería</option>
+                <option>Odontología</option>
+                <option>Psicología</option>
+                <option>Exámenes de Laboratorio</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Médico / Profesional</label>
+              <select>
+                <option>Dr. Andrés Medina</option>
+                <option>Dra. Camila Torres</option>
+                <option>Dr. Felipe Arango</option>
+                <option>Dra. Valentina Ríos</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Tipo de Consulta</label>
+              <select>
+                <option>Primera vez</option>
+                <option>Control</option>
+                <option>Urgencia</option>
+                <option>Seguimiento</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Teléfono Contacto</label>
+              <input type="tel" placeholder="+57 300 000 0000">
+            </div>
+            <div class="form-group form-full">
+              <label>Motivo de Consulta</label>
+              <textarea placeholder="Describa brevemente el motivo..."></textarea>
+            </div>
+          </div>
+          <div style="display:flex;gap:.8rem;margin-top:1.2rem;">
+            <button class="btn-sm btn-primary-sm">Guardar Cita</button>
+            <button class="btn-sm btn-ghost-sm">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PACIENTES ══════════ -->
+    <div id="panel-pacientes" class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
+        <div class="tabs" style="margin-bottom:0;">
+          <div class="tab active">Todos</div>
+          <div class="tab">Activos</div>
+          <div class="tab">Con exámenes</div>
+          <div class="tab">Nuevos</div>
+        </div>
+        <div style="display:flex;gap:.7rem;">
+          <button class="btn-sm btn-ghost-sm">📤 Exportar</button>
+          <button class="btn-sm btn-primary-sm">+ Nuevo Paciente</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Paciente</th><th>Doc.</th><th>Edad</th><th>Última visita</th><th>Servicio</th><th>Estado</th><th>Acciones</th>
+              </tr></thead>
+              <tbody id="pacientesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ PERSONAL ══════════ -->
+    <div id="panel-personal" class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.4rem;">
+        <div class="tabs" style="margin-bottom:0;">
+          <div class="tab active">Todo el Personal</div>
+          <div class="tab">Médicos</div>
+          <div class="tab">Enfermería</div>
+          <div class="tab">Administrativos</div>
+        </div>
+        <button class="btn-sm btn-primary-sm">+ Registrar Personal</button>
+      </div>
+      <div class="staff-grid" id="staffGrid"></div>
+    </div>
+
+    <!-- ══════════ EXÁMENES ══════════ -->
+    <div id="panel-examenes" class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
+        <h2 style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:600;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.04em;">Exámenes & Laboratorio</h2>
+        <button class="btn-sm btn-primary-sm">+ Solicitar Examen</button>
+      </div>
+      <div class="stats-row" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat-card"><div class="stat-icon si-orange">⏳</div><div class="stat-info"><h3>18</h3><p>Pendientes</p></div></div>
+        <div class="stat-card"><div class="stat-icon si-blue">🔬</div><div class="stat-info"><h3>5</h3><p>En proceso</p></div></div>
+        <div class="stat-card"><div class="stat-icon si-green">✅</div><div class="stat-info"><h3>142</h3><p>Completados</p></div></div>
+        <div class="stat-card"><div class="stat-icon si-red">⚠️</div><div class="stat-info"><h3>3</h3><p>Críticos</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>🧪 Órdenes de Examen</h3></div>
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Paciente</th><th>Examen</th><th>Solicitado por</th><th>Fecha</th><th>Estado</th><th>Resultado</th></tr></thead>
+              <tbody id="examenesTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ HISTORIA CLÍNICA ══════════ -->
+    <div id="panel-historia" class="panel">
+      <div class="card" style="margin-bottom:1.2rem;">
+        <div class="card-header"><h3>🔍 Buscar Historia Clínica</h3></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Nombre o Documento</label>
+              <input type="text" placeholder="Buscar paciente...">
+            </div>
+            <div class="form-group" style="justify-content:flex-end;align-items:flex-end;">
+              <button class="btn-sm btn-primary-sm" style="width:100%;justify-content:center;">Buscar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>📋 Historia: María González — CC 1098234567</h3></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--gray-100);">
+            <div><div style="font-size:.72rem;color:var(--gray-600);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Fecha nacimiento</div><div style="font-weight:600;margin-top:.2rem;">14 / Mar / 1989</div></div>
+            <div><div style="font-size:.72rem;color:var(--gray-600);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Tipo de sangre</div><div style="font-weight:600;margin-top:.2rem;">O+</div></div>
+            <div><div style="font-size:.72rem;color:var(--gray-600);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">EPS</div><div style="font-weight:600;margin-top:.2rem;">Sura</div></div>
+            <div><div style="font-size:.72rem;color:var(--gray-600);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Alergias</div><div style="font-weight:600;margin-top:.2rem;color:var(--red);">Penicilina</div></div>
+            <div><div style="font-size:.72rem;color:var(--gray-600);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Última visita</div><div style="font-weight:600;margin-top:.2rem;">10 Mar 2025</div></div>
+            <div><div style="font-size:.72rem;color:var(--gray-600);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Estado</div><div style="margin-top:.2rem;"><span class="badge badge-green">Activa</span></div></div>
+          </div>
+          <div class="tabs">
+            <div class="tab active">Consultas</div>
+            <div class="tab">Exámenes</div>
+            <div class="tab">Medicamentos</div>
+            <div class="tab">Evolución</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Fecha</th><th>Servicio</th><th>Médico</th><th>Diagnóstico</th><th>Tratamiento</th></tr></thead>
+              <tbody>
+                <tr><td>10/03/2025</td><td>Médico General</td><td>Dr. Medina</td><td>Gripe común</td><td>Acetaminofén 500mg</td></tr>
+                <tr><td>02/02/2025</td><td>Psicología</td><td>Dra. Ríos</td><td>Ansiedad leve</td><td>Terapia cognitiva</td></tr>
+                <tr><td>15/01/2025</td><td>Examen Sangre</td><td>Laboratorio</td><td>Hemograma normal</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ INVENTARIO ══════════ -->
+    <div id="panel-inventario" class="panel">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;">
+        <h2 style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:600;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.04em;">Inventario de Insumos</h2>
+        <div style="display:flex;gap:.7rem;">
+          <button class="btn-sm btn-ghost-sm">📤 Exportar</button>
+          <button class="btn-sm btn-primary-sm">+ Registrar Ingreso</button>
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-icon si-green">✅</div><div class="stat-info"><h3>84</h3><p>Ítems en stock</p></div></div>
+        <div class="stat-card"><div class="stat-icon si-orange">⚠️</div><div class="stat-info"><h3>12</h3><p>Nivel bajo</p></div></div>
+        <div class="stat-card"><div class="stat-icon si-red">❌</div><div class="stat-info"><h3>3</h3><p>Agotados</p></div></div>
+        <div class="stat-card"><div class="stat-icon si-blue">📦</div><div class="stat-info"><h3>5</h3><p>Pedidos activos</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Insumo</th><th>Categoría</th><th>Stock actual</th><th>Mínimo</th><th>Vence</th><th>Estado</th></tr></thead>
+              <tbody id="inventarioTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ REPORTES ══════════ -->
+    <div id="panel-reportes" class="panel">
+      <div class="grid-2b" style="margin-bottom:1.2rem;">
+        <div class="card">
+          <div class="card-header"><h3>📈 Atenciones Mensuales</h3></div>
+          <div class="card-body">
+            <div class="chart-area" id="reportChart"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>🏆 Top Servicios</h3></div>
+          <div class="card-body" style="display:flex;flex-direction:column;gap:.8rem;">
+            <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>🩺 Médico General</span><strong>486</strong></div><div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--blue)"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>💉 Enfermería</span><strong>312</strong></div><div class="progress-bar"><div class="progress-fill" style="width:52%;background:var(--green)"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>🦷 Odontología</span><strong>198</strong></div><div class="progress-bar"><div class="progress-fill" style="width:33%;background:var(--orange)"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>🧪 Exámenes</span><strong>175</strong></div><div class="progress-bar"><div class="progress-fill" style="width:29%;background:var(--purple)"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.3rem;"><span>🧠 Psicología</span><strong>112</strong></div><div class="progress-bar"><div class="progress-fill" style="width:18%;background:var(--red)"></div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>📊 Reporte Mensual Detallado</h3><div style="display:flex;gap:.6rem;"><button class="btn-sm btn-ghost-sm">📥 PDF</button><button class="btn-sm btn-ghost-sm">📊 Excel</button></div></div>
+        <div class="card-body" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Mes</th><th>Médico General</th><th>Enfermería</th><th>Odontología</th><th>Psicología</th><th>Exámenes</th><th>Total</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Enero</strong></td><td>156</td><td>98</td><td>62</td><td>34</td><td>55</td><td><strong>405</strong></td></tr>
+                <tr><td><strong>Febrero</strong></td><td>178</td><td>112</td><td>74</td><td>42</td><td>68</td><td><strong>474</strong></td></tr>
+                <tr><td><strong>Marzo</strong></td><td>152</td><td>102</td><td>62</td><td>36</td><td>52</td><td><strong>404</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ NOTIFICACIONES ══════════ -->
+    <div id="panel-notif" class="panel">
+      <div class="card">
+        <div class="card-header"><h3>🔔 Notificaciones del Sistema</h3><button class="btn-sm btn-ghost-sm">Marcar todo leído</button></div>
+        <div class="notif-list" id="notifList"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ CONFIGURACIÓN ══════════ -->
+    <div id="panel-config" class="panel">
+      <div class="grid-2b">
+        <div class="card">
+          <div class="card-header"><h3>👤 Mi Perfil</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="form-group form-full" style="align-items:center;">
+                <div style="width:80px;height:80px;background:var(--blue);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin-bottom:.5rem;">👩‍⚕️</div>
+              </div>
+              <div class="form-group"><label>Nombre</label><input value="Camila Torres"></div>
+              <div class="form-group"><label>Apellido</label><input value="Rodríguez"></div>
+              <div class="form-group"><label>Cargo</label><input value="Jefa de Enfermería" readonly></div>
+              <div class="form-group"><label>Email</label><input value="c.torres@saludsínlimites.co"></div>
+              <div class="form-group"><label>Teléfono</label><input value="+57 310 234 5678"></div>
+              <div class="form-group"><label>Cédula</label><input value="1094567890" readonly></div>
+            </div>
+            <button class="btn-sm btn-primary-sm" style="margin-top:1rem;">Guardar Cambios</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><h3>⚙️ Preferencias</h3></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.8rem;background:var(--gray-50);border-radius:8px;">
+                <div><div style="font-weight:600;font-size:.88rem;">Notificaciones por email</div><div style="font-size:.75rem;color:var(--gray-600);">Recibir alertas de citas</div></div>
+                <div style="width:42px;height:24px;background:var(--green);border-radius:12px;cursor:pointer;position:relative;"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:3px;top:3px;"></div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.8rem;background:var(--gray-50);border-radius:8px;">
+                <div><div style="font-weight:600;font-size:.88rem;">Recordatorio de citas</div><div style="font-size:.75rem;color:var(--gray-600);">30 min antes</div></div>
+                <div style="width:42px;height:24px;background:var(--green);border-radius:12px;cursor:pointer;position:relative;"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;right:3px;top:3px;"></div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:.8rem;background:var(--gray-50);border-radius:8px;">
+                <div><div style="font-weight:600;font-size:.88rem;">Alertas de inventario</div><div style="font-size:.75rem;color:var(--gray-600);">Cuando hay stock bajo</div></div>
+                <div style="width:42px;height:24px;background:var(--blue-light);border-radius:12px;cursor:pointer;position:relative;"><div style="width:18px;height:18px;background:white;border-radius:50%;position:absolute;left:3px;top:3px;"></div></div>
+              </div>
+            </div>
+            <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid var(--gray-100);">
+              <label class="form-group" style="gap:.4rem;">
+                <span style="font-size:.78rem;font-weight:600;color:var(--gray-600);">Cambiar contraseña</span>
+                <input type="password" placeholder="Nueva contraseña">
+              </label>
+              <button class="btn-sm btn-red-sm" style="margin-top:.8rem;">Actualizar contraseña</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<script>
+// ── Auth Check ──
+if (localStorage.getItem('adminAuthenticated') !== 'true') {
+  window.location.href = 'login-profesionales.html';
+}
+
+function logout() {
+  localStorage.removeItem('adminAuthenticated');
+  window.location.href = 'salud-sin-limites-v5.html';
+}
+
+// ── Navigation ──
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const el = document.getElementById('panel-' + id);
+  if (el) el.classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  const titles = {
+    'dashboard':'Dashboard General','citas':'Citas del Día','nueva-cita':'Nueva Cita',
+    'pacientes':'Pacientes','personal':'Personal Médico','examenes':'Exámenes & Laboratorio',
+    'historia':'Historia Clínica','inventario':'Inventario','reportes':'Reportes',
+    'notif':'Notificaciones','config':'Configuración'
+  };
+  document.getElementById('pageTitle').textContent = titles[id] || id;
+}
+
+// ── Bar Chart ──
+function renderBarChart(id) {
+  const data = [
+    {label:'Lun',val:42,c:'#1A3A8F'},{label:'Mar',val:58,c:'#2B5FD9'},{label:'Mié',val:35,c:'#1A3A8F'},
+    {label:'Jue',val:67,c:'#E8433A'},{label:'Vie',val:72,c:'#2B5FD9'},{label:'Sáb',val:28,c:'#28a870'},
+    {label:'Dom',val:12,c:'#5a6380'}
+  ];
+  const max = Math.max(...data.map(d=>d.val));
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = data.map(d => `
+    <div class="bar-wrap">
+      <div class="bar-val">${d.val}</div>
+      <div class="bar" style="height:${Math.round((d.val/max)*130)}px;background:${d.c};"></div>
+      <div class="bar-label">${d.label}</div>
+    </div>`).join('');
+}
+
+function renderReportChart() {
+  const data = [
+    {label:'Ene',val:405},{label:'Feb',val:474},{label:'Mar',val:404},
+    {label:'Abr',val:520},{label:'May',val:498},{label:'Jun',val:445}
+  ];
+  const max = Math.max(...data.map(d=>d.val));
+  const el = document.getElementById('reportChart');
+  if (!el) return;
+  el.innerHTML = data.map((d,i) => `
+    <div class="bar-wrap">
+      <div class="bar-val">${d.val}</div>
+      <div class="bar" style="height:${Math.round((d.val/max)*130)}px;background:${['#1A3A8F','#2B5FD9','#E8433A','#28a870','#f59e0b','#7c3aed'][i]};"></div>
+      <div class="bar-label">${d.label}</div>
+    </div>`).join('');
+}
+
+// ── Mini Calendar ──
+function renderCalendar() {
+  const days = ['D','L','M','X','J','V','S'];
+  const appts = [5,8,10,13,18,20,24,27];
+  let html = days.map(d=>`<div class="cal-day-name">${d}</div>`).join('');
+  // March 2025 starts on Saturday (offset 6)
+  for(let i=0;i<6;i++) html += `<div class="cal-day other-month">${23+i}</div>`;
+  for(let d=1;d<=31;d++){
+    const isToday=d===13, hasAppt=appts.includes(d);
+    html+=`<div class="cal-day ${isToday?'today':hasAppt?'has-appt':''}">${d}</div>`;
+  }
+  document.getElementById('miniCal').innerHTML = html;
+}
+
+// ── Tables Data ──
+const avatarColors = ['#1A3A8F','#E8433A','#28a870','#f59e0b','#7c3aed','#0369a1'];
+
+function av(name, i) {
+  const initials = name.split(' ').map(n=>n[0]).join('').slice(0,2);
+  return `<div class="avatar" style="background:${avatarColors[i%6]}">${initials}</div>`;
+}
+
+function renderCitas() {
+  const citas = [
+    ['07:30','María González','CC 1098234567','Médico General','Dr. Andrés Medina','badge-green','Atendido'],
+    ['08:15','Carlos Ruiz','CC 8745231069','Examen Sangre','Laboratorio','badge-blue','En Proceso'],
+    ['09:00','Laura Martínez','CC 4521873609','Psicología','Dra. Valentina Ríos','badge-orange','Esperando'],
+    ['09:45','Andrés Ospina','CC 7896541230','Odontología','Dr. Felipe Arango','badge-gray','Pendiente'],
+    ['10:30','Sofía Herrera','CC 3698521470','Enfermería','Dra. Camila Torres','badge-gray','Pendiente'],
+    ['11:00','Pedro Vargas','CC 9632587410','Médico General','Dr. Andrés Medina','badge-red','Cancelado'],
+    ['11:30','Ana López','CC 1547896320','Psicología','Dra. Valentina Ríos','badge-gray','Pendiente'],
+    ['12:00','Diego Castro','CC 7531594820','Examen Orina','Laboratorio','badge-gray','Pendiente'],
+  ];
+  document.getElementById('citasTable').innerHTML = citas.map((c,i)=>`<tr>
+    <td><strong>${c[0]}</strong></td>
+    <td><div class="user-cell">${av(c[1],i)}<div><div class="user-name">${c[1]}</div><div class="user-sub">${c[2]}</div></div></div></td>
+    <td>${c[3]}</td><td>${c[4]}</td>
+    <td><span class="badge ${c[5]}">${c[6]}</span></td>
+    <td><div style="display:flex;gap:.4rem;">
+      <button class="btn-sm btn-ghost-sm" style="padding:.3rem .6rem;font-size:.72rem;">Ver</button>
+      <button class="btn-sm btn-primary-sm" style="padding:.3rem .6rem;font-size:.72rem;">Editar</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function renderPacientes() {
+  const p = [
+    ['María González','1098234567',36,'10/03/2025','Médico General','badge-green','Activo'],
+    ['Carlos Ruiz','8745231069',52,'08/03/2025','Laboratorio','badge-blue','En tratamiento'],
+    ['Laura Martínez','4521873609',28,'10/03/2025','Psicología','badge-green','Activo'],
+    ['Andrés Ospina','7896541230',44,'05/03/2025','Odontología','badge-orange','Seguimiento'],
+    ['Sofía Herrera','3698521470',31,'01/03/2025','Enfermería','badge-green','Activo'],
+    ['Diego Castro','7531594820',19,'12/03/2025','Laboratorio','badge-blue','En tratamiento'],
+    ['Ana López','1547896320',67,'22/02/2025','Psicología','badge-gray','Inactivo'],
+    ['Pedro Vargas','9632587410',43,'15/02/2025','Médico General','badge-gray','Inactivo'],
+  ];
+  document.getElementById('pacientesTable').innerHTML = p.map((r,i)=>`<tr>
+    <td><div class="user-cell">${av(r[0],i)}<div class="user-name">${r[0]}</div></div></td>
+    <td>${r[1]}</td><td>${r[2]} años</td><td>${r[3]}</td><td>${r[4]}</td>
+    <td><span class="badge ${r[5]}">${r[6]}</span></td>
+    <td><div style="display:flex;gap:.4rem;">
+      <button class="btn-sm btn-ghost-sm" style="padding:.3rem .6rem;font-size:.72rem;" onclick="showPanel('historia')">Historia</button>
+      <button class="btn-sm btn-primary-sm" style="padding:.3rem .6rem;font-size:.72rem;" onclick="showPanel('citas')">Cita</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+function renderStaff() {
+  const staff = [
+    {name:'Dr. Andrés Medina',role:'Médico General',tags:['12 años exp.','Consulta','Urgencias'],color:'#1A3A8F',emoji:'👨‍⚕️',status:'active'},
+    {name:'Dra. Camila Torres',role:'Jefa de Enfermería',tags:['Cuidado Crítico','Jefatura'],color:'#28a870',emoji:'👩‍⚕️',status:'active'},
+    {name:'Dr. Felipe Arango',role:'Odontólogo',tags:['Ortodoncia','Cirugía Oral'],color:'#0369a1',emoji:'🦷',status:'active'},
+    {name:'Dra. Valentina Ríos',role:'Psicóloga Clínica',tags:['Terapia CBT','Familiar'],color:'#7c3aed',emoji:'🧠',status:'active'},
+    {name:'Lic. Jorge Peña',role:'Enfermero',tags:['Inyectología','Curaciones'],color:'#28a870',emoji:'💉',status:'active'},
+    {name:'Dra. Patricia Mora',role:'Médica General',tags:['Pediatría','Preventiva'],color:'#E8433A',emoji:'👩‍⚕️',status:'vacation'},
+    {name:'Tec. Luis Bermúdez',role:'Laboratorista',tags:['Hemograma','Bioquímica'],color:'#7c3aed',emoji:'🔬',status:'active'},
+    {name:'Admin. Rosa Cárdenas',role:'Directora Administrativa',tags:['Gerencia','Coord.'],color:'#f59e0b',emoji:'💼',status:'active'},
+    {name:'Lic. Elena Suárez',role:'Enfermera',tags:['Vacunación','Triage'],color:'#28a870',emoji:'💊',status:'active'},
+  ];
+  document.getElementById('staffGrid').innerHTML = staff.map(s=>`
+    <div class="staff-card">
+      <div class="staff-photo-area" style="background:linear-gradient(160deg,${s.color}22 0%,${s.color}44 100%);">
+        <svg viewBox="0 0 160 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+          <rect width="160" height="130" fill="${s.color}18"/>
+          <!-- Body coat -->
+          <path d="M20 130 L30 80 Q55 68 80 66 Q105 68 130 80 L140 130Z" fill="${s.color}25" stroke="${s.color}40" stroke-width="1"/>
+          <!-- Neck -->
+          <rect x="70" y="58" width="20" height="16" rx="8" fill="${s.color}60"/>
+          <!-- Head -->
+          <ellipse cx="80" cy="44" rx="28" ry="30" fill="${s.color}60"/>
+          <!-- Hair suggestion -->
+          <path d="M52 40 Q52 18 80 15 Q108 18 108 40 L106 25 Q90 12 80 14 Q70 12 54 25Z" fill="${s.color}90"/>
+          <!-- Eyes -->
+          <ellipse cx="72" cy="44" rx="5" ry="4.5" fill="white" opacity=".8"/>
+          <ellipse cx="88" cy="44" rx="5" ry="4.5" fill="white" opacity=".8"/>
+          <ellipse cx="72" cy="44" rx="3" ry="3" fill="${s.color}"/>
+          <ellipse cx="88" cy="44" rx="3" ry="3" fill="${s.color}"/>
+          <circle cx="73" cy="43" r="1.2" fill="white"/>
+          <circle cx="89" cy="43" r="1.2" fill="white"/>
+          <!-- Nose -->
+          <path d="M76 53 Q80 57 84 53" fill="none" stroke="${s.color}80" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Smile -->
+          <path d="M70 62 Q80 70 90 62" fill="none" stroke="${s.color}80" stroke-width="2" stroke-linecap="round"/>
+          <!-- Emoji badge -->
+          <text x="120" y="30" font-size="22" text-anchor="middle">${s.emoji}</text>
+        </svg>
+        ${s.status==='vacation'?'<div style="position:absolute;top:.6rem;right:.6rem;background:#f59e0b;color:white;font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:4px;letter-spacing:.04em;">VACACIONES</div>':''}
+        ${s.status==='active'?'<div style="position:absolute;top:.6rem;right:.6rem;width:10px;height:10px;background:#28a870;border-radius:50%;border:2px solid white;"></div>':''}
+      </div>
+      <div class="staff-info-area">
+        <div class="staff-name">${s.name}</div>
+        <div class="staff-specialty">${s.role}</div>
+        <div class="staff-meta">${s.tags.map(t=>`<span class="staff-tag">${t}</span>`).join('')}</div>
+        <div class="staff-actions">
+          <button class="btn-sm btn-ghost-sm" style="padding:.3rem .6rem;font-size:.72rem;flex:1;justify-content:center;" onclick="showPanel('citas')">📅 Citas</button>
+          <button class="btn-sm btn-primary-sm" style="padding:.3rem .6rem;font-size:.72rem;flex:1;justify-content:center;">✏️ Editar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function renderExamenes() {
+  const ex = [
+    ['María González','Hemograma completo','Dr. Medina','10/03/2025','badge-green','✅ Listo'],
+    ['Carlos Ruiz','Glicemia en ayunas','Dr. Medina','10/03/2025','badge-blue','🔬 Proceso'],
+    ['Laura Martínez','Perfil lipídico','Dr. Medina','09/03/2025','badge-green','✅ Listo'],
+    ['Andrés Ospina','Rx. Panorámica dental','Dr. Arango','08/03/2025','badge-green','✅ Listo'],
+    ['Diego Castro','Uroanálisis','Dra. Torres','12/03/2025','badge-orange','⏳ Pendiente'],
+    ['Sofía Herrera','Tiroideos TSH/T4','Dr. Medina','07/03/2025','badge-red','⚠️ Crítico'],
+    ['Ana López','Electrocardiograma','Dr. Medina','11/03/2025','badge-blue','🔬 Proceso'],
+  ];
+  document.getElementById('examenesTable').innerHTML = ex.map((r,i)=>`<tr>
+    <td><div class="user-cell">${av(r[0],i)}<div class="user-name">${r[0]}</div></div></td>
+    <td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td>
+    <td><span class="badge ${r[4]}">${r[5]}</span></td>
+    <td><div style="display:flex;gap:.4rem;">
+      <button class="btn-sm btn-ghost-sm" style="padding:.3rem .6rem;font-size:.72rem;">Ver</button>
+      ${r[4]==='badge-green'?'<button class="btn-sm btn-green-sm" style="padding:.3rem .6rem;font-size:.72rem;">Entregar</button>':''}
+    </div></td>
+  </tr>`).join('');
+}
+
+function renderInventario() {
+  const inv = [
+    ['Guantes de nitrilo (S)','Insumo','450 cajas','50','12/2025','badge-green','Normal'],
+    ['Jeringas 5ml','Insumo','120 unid.','200','06/2025','badge-orange','Bajo'],
+    ['Acetaminofén 500mg','Medicamento','80 cajas','30','03/2026','badge-green','Normal'],
+    ['Alcohol antiséptico 70%','Insumo','8 litros','10','sin vence','badge-orange','Bajo'],
+    ['Gasas estériles','Insumo','0 paquetes','20','','badge-red','Agotado'],
+    ['Amoxicilina 500mg','Medicamento','45 cajas','15','08/2025','badge-green','Normal'],
+    ['Vendas elásticas','Insumo','14 rollos','10','sin vence','badge-green','Normal'],
+    ['Tensiómetro digital','Equipo','2 unidades','1','','badge-green','Normal'],
+  ];
+  document.getElementById('inventarioTable').innerHTML = inv.map(r=>`<tr>
+    <td><strong>${r[0]}</strong></td><td>${r[1]}</td><td>${r[2]}</td>
+    <td>${r[3]}</td><td>${r[4]||'—'}</td>
+    <td><span class="badge ${r[5]}">${r[6]}</span></td>
+  </tr>`).join('');
+}
+
+function renderNotificaciones() {
+  const notifs = [
+    {icon:'🔴',bg:'rgba(232,67,58,.12)',text:'Resultado crítico: Sofía Herrera — TSH elevado. Requiere atención urgente.',time:'Hace 15 min',unread:true},
+    {icon:'⚠️',bg:'rgba(245,158,11,.12)',text:'Stock bajo: Jeringas 5ml quedan 120 unidades (mínimo 200).',time:'Hace 1 hora',unread:true},
+    {icon:'📅',bg:'rgba(43,95,217,.12)',text:'Recordatorio: 12 citas programadas para hoy. Primer turno en 30 min.',time:'Hace 2 horas',unread:true},
+    {icon:'✅',bg:'rgba(40,168,112,.12)',text:'Historia clínica de Carlos Ruiz actualizada por Dr. Medina.',time:'Hace 3 horas',unread:false},
+    {icon:'💊',bg:'rgba(124,58,237,.12)',text:'Pedido de insumos #PED-2025-048 confirmado. Llegada: 15/03.',time:'Ayer 4:30pm',unread:false},
+    {icon:'👤',bg:'rgba(26,58,143,.12)',text:'Nuevo paciente registrado: Diego Castro (CC 7531594820).',time:'Ayer 2:10pm',unread:false},
+    {icon:'📊',bg:'rgba(26,58,143,.12)',text:'Reporte mensual de Febrero generado exitosamente.',time:'01/03 9:00am',unread:false},
+  ];
+  document.getElementById('notifList').innerHTML = notifs.map(n=>`
+    <div class="notif-item ${n.unread?'unread':''}">
+      <div class="notif-icon" style="background:${n.bg}">${n.icon}</div>
+      <div class="notif-text" style="flex:1"><p>${n.text}</p><span>${n.time}</span></div>
+      ${n.unread?'<div class="notif-unread-dot"></div>':''}
+    </div>`).join('');
+}
+
+// ── Init ──
+renderBarChart('barChart');
+renderCalendar();
+renderCitas();
+renderPacientes();
+renderStaff();
+renderExamenes();
+renderInventario();
+renderNotificaciones();
+setTimeout(renderReportChart, 100);
+</script>
+</body>
+</html>
