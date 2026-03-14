@@ -1159,6 +1159,40 @@
       transform: scale(1.08);
     }
 
+    .back-to-top {
+      position: fixed;
+      bottom: 6.5rem;
+      right: 2rem;
+      width: 48px;
+      height: 48px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 999;
+      transition: all .3s ease;
+      visibility: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .back-to-top.visible {
+      visibility: visible;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: var(--red-light);
+      transform: translateY(-5px);
+    }
+
     /* Animation */
     @keyframes fadeUp {
       from {
@@ -2392,16 +2426,16 @@
         <form id="pqrForm" onsubmit="event.preventDefault(); submitPqr();">
           <!-- Hidden input to track the selected PQR type -->
           <input type="hidden" name="tipo_pqr" id="pqr_type_input" value="Petición">
-          
+
           <div class="form-row" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
             <div class="form-group" style="display:flex; flex-direction:column; gap:.5rem;">
               <label style="font-weight:600; font-size:.9rem;">Nombre Completo</label>
-              <input type="text" name="nombre" placeholder="Ej: Juan Pérez" required
+              <input type="text" name="nombre" placeholder="Ej: Juan Pérez" required maxlength="50"
                 style="padding:.75rem; border:1px solid #ddd; border-radius:8px;">
             </div>
             <div class="form-group" style="display:flex; flex-direction:column; gap:.5rem;">
               <label style="font-weight:600; font-size:.9rem;">Cédula</label>
-              <input type="text" name="cedula" placeholder="Documento de identidad" required
+              <input type="text" name="cedula" placeholder="Documento de identidad" required maxlength="15"
                 style="padding:.75rem; border:1px solid #ddd; border-radius:8px;">
             </div>
           </div>
@@ -2413,7 +2447,7 @@
             </div>
             <div class="form-group" style="display:flex; flex-direction:column; gap:.5rem;">
               <label style="font-weight:600; font-size:.9rem;">Teléfono</label>
-              <input type="tel" name="telefono" placeholder="300 000 0000"
+              <input type="tel" name="telefono" placeholder="300 000 0000" maxlength="15"
                 style="padding:.75rem; border:1px solid #ddd; border-radius:8px;">
             </div>
           </div>
@@ -2428,13 +2462,14 @@
           </div>
           <div class="form-group" style="display:flex; flex-direction:column; gap:.5rem; margin-bottom:1.5rem;">
             <label style="font-weight:600; font-size:.9rem;">Descripción del requerimiento</label>
-            <textarea name="descripcion" rows="4" placeholder="Escribe aquí los detalles..." required
+            <textarea name="descripcion" rows="4" placeholder="Escribe aquí los detalles..." required maxlength="2500"
               style="padding:.75rem; border:1px solid #ddd; border-radius:8px; resize:none;"></textarea>
           </div>
 
+          <input type="file" id="pqrFile" name="adjunto" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
           <div class="upload-zone" id="dropZonePqr"
             style="border:2px dashed var(--gray-200); padding:1.5rem; text-align:center; border-radius:12px; margin-bottom:1.5rem; cursor:pointer; color:var(--gray-600); font-size:.9rem;">
-            📁 Arrastra archivos aquí o haz clic para adjuntar evidencias (Opcional)
+            <span id="uploadText">📁 Arrastra archivos aquí o haz clic para adjuntar evidencias (Max 1MB)</span>
           </div>
 
           <button type="submit" id="submitBtnPqr" class="btn btn-primary"
@@ -2510,6 +2545,12 @@
     </div>
   </footer>
 
+  <!-- Floating Transitions -->
+  <button class="back-to-top" id="backToTop" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+    title="Volver arriba">
+    ↑
+  </button>
+
   <!-- Floating Chat -->
   <button class="float-chat" onclick="document.getElementById('chatbot').scrollIntoView({behavior:'smooth'})"
     title="Chat de salud">💬</button>
@@ -2528,7 +2569,7 @@
       if (btn) {
         btn.classList.add('selected');
         if (typeInput) typeInput.value = typeNames[type] || 'Desconocido';
-        
+
         if (type === 'P') btn.classList.add('p-sel');
         if (type === 'Q') btn.classList.add('q-sel');
         if (type === 'R') btn.classList.add('r-sel');
@@ -2542,11 +2583,11 @@
       const submitBtn = document.getElementById('submitBtnPqr');
       const radicadoBox = document.getElementById('radicadoBox');
       const radicadoElement = document.getElementById('radicadoNum');
-      
+
       if (!pqrForm || !submitBtn || !radicadoBox || !radicadoElement) return;
 
       const radicadoNum = 'SSL-2025-' + Math.floor(Math.random() * 90000 + 10000);
-      
+
       // Preparar datos para Formspree
       const formData = new FormData(pqrForm);
       formData.append('radicado', radicadoNum);
@@ -2582,9 +2623,40 @@
       }
     }
 
-    // Inicializar zona de carga con alerta simple
-    document.getElementById('dropZonePqr').addEventListener('click', () => {
-      alert('Funcionalidad de adjuntos habilitada para producción. Selecciona un archivo PDF, JPG o PNG.');
+    // Funcionalidad de adjuntos con validación de tamaño
+    const pqrFileInput = document.getElementById('pqrFile');
+    const dropZonePqr = document.getElementById('dropZonePqr');
+    const uploadText = document.getElementById('uploadText');
+
+    dropZonePqr.addEventListener('click', () => {
+      pqrFileInput.click();
+    });
+
+    pqrFileInput.addEventListener('change', function () {
+      if (this.files && this.files[0]) {
+        const file = this.files[0];
+        const maxSize = 1 * 1024 * 1024; // 1 MB
+
+        if (file.size > maxSize) {
+          alert('El archivo es demasiado grande. El tamaño máximo permitido es 1MB.');
+          this.value = ''; // Limpiar el input
+          uploadText.innerText = '📁 Arrastra archivos aquí o haz clic para adjuntar evidencias (Max 1MB)';
+          dropZonePqr.style.borderColor = 'var(--red)';
+        } else {
+          uploadText.innerText = '✅ Archivo seleccionado: ' + file.name;
+          dropZonePqr.style.borderColor = '#28a870';
+        }
+      }
+    });
+
+    // Control de visibilidad del botón para volver arriba
+    window.addEventListener('scroll', () => {
+      const backToTop = document.getElementById('backToTop');
+      if (window.scrollY > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
     });
   </script>
 </body>
