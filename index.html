@@ -314,6 +314,13 @@
       margin-top: 3rem;
     }
 
+    @media (max-width: 768px) {
+      .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* cambia a 2 columnas */
+      }
+    }
+
     .team-card {
       border-radius: 12px;
       overflow: hidden;
@@ -1046,7 +1053,7 @@
 
     .footer-brand img {
       height: 48px;
-      filter: brightness(0) invert(1);
+      /*filter: brightness(0) invert(1);*/
       margin-bottom: 1rem;
     }
 
@@ -1431,8 +1438,8 @@
     <ul class="nav-links">
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="#equipo">Equipo Médico</a></li>
-      <li><a href="#sedes">Sedes</a></li>
       <li><a href="#atencion">Atención</a></li>
+      <li><a href="#sedes">Sedes</a></li>
       <li><a href="#biblioteca">Salud</a></li>
       <li><a href="#pqr">PQR</a></li>
       <li><a href="#chatbot" class="nav-cta">Pedir Cita</a></li>
@@ -1520,165 +1527,271 @@
       <h2 class="section-title">Atención integral<br>para toda la familia</h2>
       <p class="section-sub">Ofrecemos servicios de salud de primer nivel con personal calificado y comprometido con tu
         bienestar.</p>
+    </div>
 
-      <div class="services-grid">
-        <div class="service-card">
-          <div class="service-photo-art"
-            style="width:100%;height:140px;border-radius:8px;margin-bottom:1rem;background:linear-gradient(135deg,#1a3a8f 0%,#2b5fd9 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-              <rect width="200" height="140" fill="url(#gm)" />
-              <defs>
-                <linearGradient id="gm" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#1a3a8f" />
-                  <stop offset="1" stop-color="#2b5fd9" />
-                </linearGradient>
-              </defs>
-              <!-- Doctor icon -->
-              <circle cx="100" cy="42" r="24" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.5)"
-                stroke-width="2" />
-              <path d="M60 120 Q65 85 100 82 Q135 85 140 120" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.5)"
-                stroke-width="2" />
-              <rect x="88" y="100" width="24" height="6" rx="3" fill="rgba(232,67,58,.8)" />
-              <rect x="97" y="91" width="6" height="24" rx="3" fill="rgba(232,67,58,.8)" />
-              <text x="100" y="135" text-anchor="middle" font-family="sans-serif" font-size="9"
-                fill="rgba(255,255,255,.6)" letter-spacing="1">CONSULTA MÉDICA</text>
-            </svg>
-          </div>
-          <div class="service-icon">🩺</div>
-          <h3>Médico General</h3>
-          <p>Consultas médicas, diagnóstico y tratamiento de enfermedades comunes. Atención preventiva y seguimiento de
-            pacientes.</p>
-          <a href="#" class="service-link">Ver más →</a>
-        </div>
-        <div class="service-card">
-          <div class="service-photo-art"
-            style="width:100%;height:140px;border-radius:8px;margin-bottom:1rem;background:linear-gradient(135deg,#0e6e4a 0%,#28a870 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-              <defs>
-                <linearGradient id="ge" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#0e6e4a" />
-                  <stop offset="1" stop-color="#28a870" />
-                </linearGradient>
-              </defs>
-              <rect width="200" height="140" fill="url(#ge)" />
-              <circle cx="100" cy="42" r="24" fill="rgba(255,255,255,.18)" stroke="rgba(255,255,255,.5)"
-                stroke-width="2" />
-              <!-- Nurse hat -->
-              <path d="M76 30 L124 30 L120 18 L80 18 Z" fill="rgba(255,255,255,.4)" />
-              <rect x="91" y="20" width="18" height="4" rx="2" fill="rgba(232,67,58,.8)" />
-              <rect x="97" y="16" width="6" height="12" rx="2" fill="rgba(232,67,58,.8)" />
-              <path d="M62 120 Q67 85 100 82 Q133 85 138 120" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.5)"
-                stroke-width="2" />
-              <!-- Syringe -->
-              <rect x="76" y="100" width="48" height="8" rx="4" fill="rgba(255,255,255,.4)" />
-              <rect x="120" y="102" width="14" height="4" rx="2" fill="rgba(255,255,255,.6)" />
-              <text x="100" y="135" text-anchor="middle" font-family="sans-serif" font-size="9"
-                fill="rgba(255,255,255,.6)" letter-spacing="1">ENFERMERÍA</text>
-            </svg>
-          </div>
-          <div class="service-icon">💉</div>
-          <h3>Enfermería</h3>
-          <p>Cuidado integral, curaciones, inyectología, toma de signos vitales y acompañamiento en procedimientos.</p>
-          <a href="#" class="service-link">Ver más →</a>
-        </div>
-        <div class="service-card">
-          <div class="service-photo-art"
-            style="width:100%;height:140px;border-radius:8px;margin-bottom:1rem;background:linear-gradient(135deg,#5b21b6 0%,#7c3aed 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-              <defs>
-                <linearGradient id="gx" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#5b21b6" />
-                  <stop offset="1" stop-color="#7c3aed" />
-                </linearGradient>
-              </defs>
-              <rect width="200" height="140" fill="url(#gx)" />
-              <!-- Test tube -->
-              <rect x="82" y="25" width="16" height="60" rx="8" fill="rgba(255,255,255,.2)"
-                stroke="rgba(255,255,255,.5)" stroke-width="2" />
-              <rect x="82" y="65" width="16" height="20" rx="0" fill="rgba(232,67,58,.5)" />
-              <ellipse cx="90" cy="85" rx="8" ry="8" fill="rgba(232,67,58,.7)" />
-              <!-- Molecule dots -->
-              <circle cx="130" cy="45" r="8" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.4)"
-                stroke-width="2" />
-              <circle cx="150" cy="65" r="6" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.4)"
-                stroke-width="2" />
-              <circle cx="140" cy="85" r="5" fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.4)"
-                stroke-width="2" />
-              <line x1="130" y1="45" x2="150" y2="65" stroke="rgba(255,255,255,.3)" stroke-width="1.5" />
-              <line x1="150" y1="65" x2="140" y2="85" stroke="rgba(255,255,255,.3)" stroke-width="1.5" />
-              <text x="100" y="127" text-anchor="middle" font-family="sans-serif" font-size="9"
-                fill="rgba(255,255,255,.6)" letter-spacing="1">LABORATORIO</text>
-            </svg>
-          </div>
-          <div class="service-icon">🧪</div>
-          <h3>Exámenes Médicos</h3>
-          <p>Laboratorio clínico, hemogramas, glicemia, uroanálisis, perfiles lipídicos y más exámenes diagnósticos.</p>
-          <a href="#" class="service-link">Ver más →</a>
-        </div>
-        <div class="service-card">
-          <div class="service-photo-art"
-            style="width:100%;height:140px;border-radius:8px;margin-bottom:1rem;background:linear-gradient(135deg,#0369a1 0%,#0ea5e9 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-              <defs>
-                <linearGradient id="go" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#0369a1" />
-                  <stop offset="1" stop-color="#0ea5e9" />
-                </linearGradient>
-              </defs>
-              <rect width="200" height="140" fill="url(#go)" />
-              <!-- Tooth shape -->
-              <path
-                d="M80 30 Q80 20 100 20 Q120 20 120 30 L125 70 Q127 90 115 95 Q107 98 100 90 Q93 98 85 95 Q73 90 75 70 Z"
-                fill="rgba(255,255,255,.35)" stroke="rgba(255,255,255,.6)" stroke-width="2" />
-              <path d="M90 55 Q95 48 100 55 Q105 48 110 55" fill="none" stroke="rgba(255,255,255,.4)"
-                stroke-width="1.5" />
-              <!-- Dental tools -->
-              <line x1="135" y1="25" x2="155" y2="85" stroke="rgba(255,255,255,.5)" stroke-width="3"
-                stroke-linecap="round" />
-              <circle cx="155" cy="88" r="5" fill="rgba(255,255,255,.5)" />
-              <text x="100" y="127" text-anchor="middle" font-family="sans-serif" font-size="9"
-                fill="rgba(255,255,255,.6)" letter-spacing="1">ODONTOLOGÍA</text>
-            </svg>
-          </div>
-          <div class="service-icon">🦷</div>
-          <h3>Odontología</h3>
-          <p>Limpieza dental, extracciones, obturaciones, ortodoncia básica y tratamiento de enfermedades bucales.</p>
-          <a href="#" class="service-link">Ver más →</a>
-        </div>
-        <div class="service-card">
-          <div class="service-photo-art"
-            style="width:100%;height:140px;border-radius:8px;margin-bottom:1rem;background:linear-gradient(135deg,#92400e 0%,#d97706 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;">
-            <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-              <defs>
-                <linearGradient id="gp" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="#92400e" />
-                  <stop offset="1" stop-color="#d97706" />
-                </linearGradient>
-              </defs>
-              <rect width="200" height="140" fill="url(#gp)" />
-              <!-- Brain outline -->
-              <path
-                d="M70 75 Q68 55 80 48 Q88 42 95 50 Q98 40 110 42 Q125 38 128 55 Q140 52 138 68 Q148 72 142 85 Q148 95 138 100 Q130 110 115 105 Q105 115 95 108 Q82 115 75 105 Q60 98 65 85 Q58 80 70 75Z"
-                fill="rgba(255,255,255,.2)" stroke="rgba(255,255,255,.5)" stroke-width="2" />
-              <!-- Neural lines -->
-              <path d="M95 50 Q100 65 105 80" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5" />
-              <path d="M80 68 Q95 72 110 68" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5" />
-              <path d="M78 85 Q95 82 118 85" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5" />
-              <circle cx="95" cy="50" r="3" fill="rgba(255,255,255,.6)" />
-              <circle cx="105" cy="80" r="3" fill="rgba(255,255,255,.6)" />
-              <circle cx="80" cy="68" r="3" fill="rgba(255,255,255,.6)" />
-              <circle cx="118" cy="68" r="3" fill="rgba(255,255,255,.6)" />
-              <text x="100" y="127" text-anchor="middle" font-family="sans-serif" font-size="9"
-                fill="rgba(255,255,255,.6)" letter-spacing="1">PSICOLOGÍA</text>
-            </svg>
-          </div>
-          <div class="service-icon">🧠</div>
-          <h3>Psicología</h3>
-          <p>Apoyo emocional, manejo del estrés, ansiedad y depresión. Terapia individual, familiar y de pareja.</p>
-          <a href="#" class="service-link">Ver más →</a>
+    <!-- HORIZONTAL ACCORDION -->
+    <div class="srv-accordion" id="srvAccordion">
+
+      <!-- Panel 1: Medico General -->
+      <div class="srv-panel active" id="srv-1"
+        style="--img:url('https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=900&auto=format&fit=crop')">
+        <div class="srv-overlay"></div>
+        <div class="srv-label-vertical">&#x1FA7A; M&eacute;dico General</div>
+        <div class="srv-content">
+          <div class="srv-icon-wrap">&#x1FA7A;</div>
+          <h3 class="srv-title">M&eacute;dico General</h3>
+          <p class="srv-desc">Consultas m&eacute;dicas, diagn&oacute;stico y tratamiento de enfermedades comunes.
+            Atenci&oacute;n preventiva y seguimiento de pacientes con vocaci&oacute;n de servicio.</p>
+          <a href="#chatbot" class="srv-btn">Pedir Cita &rarr;</a>
         </div>
       </div>
-    </div>
+
+      <!-- Panel 2: Enfermeria -->
+      <div class="srv-panel" id="srv-2"
+        style="--img:url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=900&auto=format&fit=crop')">
+        <div class="srv-overlay"></div>
+        <div class="srv-label-vertical">&#x1F489; Enfermer&iacute;a</div>
+        <div class="srv-content">
+          <div class="srv-icon-wrap">&#x1F489;</div>
+          <h3 class="srv-title">Enfermer&iacute;a</h3>
+          <p class="srv-desc">Cuidado integral, curaciones, inyectolog&iacute;a, toma de signos vitales y
+            acompa&ntilde;amiento continuo en cada procedimiento m&eacute;dico.</p>
+          <a href="#chatbot" class="srv-btn">Pedir Cita &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Panel 3: Laboratorio -->
+      <div class="srv-panel" id="srv-3"
+        style="--img:url('https://images.unsplash.com/photo-1530026454774-5f44f9ba1dfc?w=900&auto=format&fit=crop')">
+        <div class="srv-overlay"></div>
+        <div class="srv-label-vertical">&#x1F9EA; Laboratorio</div>
+        <div class="srv-content">
+          <div class="srv-icon-wrap">&#x1F9EA;</div>
+          <h3 class="srv-title">Ex&aacute;menes M&eacute;dicos</h3>
+          <p class="srv-desc">Laboratorio cl&iacute;nico completo: hemogramas, glicemia, uron&aacute;lisis, perfiles
+            lip&iacute;dicos y todos los ex&aacute;menes diagn&oacute;sticos que necesitas.</p>
+          <a href="#chatbot" class="srv-btn">Solicitar Examen &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Panel 4: Odontologia -->
+      <div class="srv-panel" id="srv-4"
+        style="--img:url('https://images.unsplash.com/photo-1606811841689-23dfddce3e95?w=900&auto=format&fit=crop')">
+        <div class="srv-overlay"></div>
+        <div class="srv-label-vertical">&#x1F9B7; Odontolog&iacute;a</div>
+        <div class="srv-content">
+          <div class="srv-icon-wrap">&#x1F9B7;</div>
+          <h3 class="srv-title">Odontolog&iacute;a</h3>
+          <p class="srv-desc">Limpieza dental, extracciones, obturaciones, ortodoncia b&aacute;sica y tratamiento
+            integral de enfermedades bucales para toda la familia.</p>
+          <a href="#chatbot" class="srv-btn">Pedir Cita &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Panel 5: Psicologia -->
+      <div class="srv-panel" id="srv-5"
+        style="--img:url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop')">
+        <div class="srv-overlay"></div>
+        <div class="srv-label-vertical">&#x1F9E0; Psicolog&iacute;a</div>
+        <div class="srv-content">
+          <div class="srv-icon-wrap">&#x1F9E0;</div>
+          <h3 class="srv-title">Psicolog&iacute;a</h3>
+          <p class="srv-desc">Apoyo emocional profesional: manejo del estr&eacute;s, ansiedad y depresi&oacute;n.
+            Terapia individual, familiar y de pareja con enfoque humanista.</p>
+          <a href="#chatbot" class="srv-btn">Agendar Sesi&oacute;n &rarr;</a>
+        </div>
+      </div>
+
+    </div><!-- /srv-accordion -->
+
+    <style>
+      .srv-accordion {
+        display: flex;
+        height: 520px;
+        margin-top: 3rem;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 24px 64px rgba(26, 58, 143, .18);
+        gap: 3px;
+        background: var(--blue-dark);
+      }
+
+      .srv-panel {
+        position: relative;
+        flex: 0.6;
+        min-width: 60px;
+        cursor: pointer;
+        transition: flex .55s cubic-bezier(.4, 0, .2, 1);
+        background-image: var(--img);
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+      }
+
+      .srv-panel.active {
+        flex: 4;
+      }
+
+      .srv-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(10, 18, 60, .92) 0%, rgba(10, 18, 60, .55) 50%, rgba(10, 18, 60, .15) 100%);
+        transition: background .4s;
+      }
+
+      .srv-panel.active .srv-overlay {
+        background: linear-gradient(to top, rgba(10, 18, 60, .96) 0%, rgba(10, 18, 60, .6) 42%, rgba(10, 18, 60, .1) 100%);
+      }
+
+      .srv-label-vertical {
+        position: absolute;
+        bottom: 2.2rem;
+        left: 50%;
+        transform: translateX(-50%) rotate(-90deg);
+        white-space: nowrap;
+        font-family: var(--font-display);
+        font-size: .82rem;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .9);
+        opacity: 1;
+        transition: opacity .3s .1s;
+        pointer-events: none;
+      }
+
+      .srv-panel.active .srv-label-vertical {
+        opacity: 0;
+        transition: opacity .15s;
+      }
+
+      .srv-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 2.2rem 2rem 2rem;
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity .35s .15s, transform .35s .15s;
+        pointer-events: none;
+      }
+
+      .srv-panel.active .srv-content {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .srv-icon-wrap {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        background: var(--red);
+        border-radius: 14px;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 6px 20px rgba(232, 67, 58, .4);
+      }
+
+      .srv-title {
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        margin-bottom: .7rem;
+        line-height: 1.1;
+      }
+
+      .srv-desc {
+        font-family: var(--font-body);
+        font-size: .92rem;
+        color: rgba(255, 255, 255, .82);
+        line-height: 1.65;
+        margin-bottom: 1.4rem;
+        max-width: 340px;
+      }
+
+      .srv-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: var(--red);
+        color: #fff;
+        font-family: var(--font-display);
+        font-size: .85rem;
+        font-weight: 600;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: .65rem 1.4rem;
+        border-radius: 6px;
+        text-decoration: none;
+        transition: background .2s, transform .2s, box-shadow .2s;
+        box-shadow: 0 4px 16px rgba(232, 67, 58, .35);
+      }
+
+      .srv-btn:hover {
+        background: var(--red-light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(232, 67, 58, .5);
+      }
+
+      @media (max-width: 768px) {
+        .srv-accordion {
+          flex-direction: column;
+          height: auto;
+          gap: 2px;
+          border-radius: 12px;
+        }
+
+        .srv-panel {
+          flex: none !important;
+          min-width: unset;
+          height: 72px;
+          transition: height .5s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .srv-panel.active {
+          height: 380px;
+        }
+
+        .srv-label-vertical {
+          font-size: .75rem;
+          bottom: unset;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        .srv-panel.active .srv-label-vertical {
+          opacity: 0;
+        }
+
+        .srv-content {
+          padding: 1.6rem 1.4rem 1.4rem;
+        }
+
+        .srv-desc {
+          font-size: .85rem;
+        }
+      }
+    </style>
+
+    <script>
+      (function () {
+        var panels = document.querySelectorAll('#srvAccordion .srv-panel');
+        panels.forEach(function (panel) {
+          panel.addEventListener('click', function () {
+            panels.forEach(function (p) { p.classList.remove('active'); });
+            panel.classList.add('active');
+          });
+        });
+      })();
+    </script>
+
   </section>
 
   <!-- TEAM -->
