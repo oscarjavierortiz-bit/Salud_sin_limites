@@ -1794,6 +1794,219 @@
 
   </section>
 
+  <!-- ENTRENAMIENTOS CON TECNOLOGÍA -->
+  <section class="training-section" id="entrenamientos" style="background:#f9fafc;">
+    <div class="container">
+      <div class="section-label" style="color:var(--red);">Salud Activa para Adultos Mayores</div>
+      <h2 class="section-title" style="color:var(--blue-dark);">Entrenamientos<br>con Tecnología</h2>
+      <p class="section-sub">Fortalece tu cuerpo desde casa. Te guiamos paso a paso y evaluamos tus ejercicios mediante nuestro asistente de Inteligencia Artificial para asegurar que los realices correctamente.</p>
+
+      <!-- Slider Container -->
+      <div class="slider-container">
+        <div class="slider-wrapper">
+          <div class="slider-slide">
+            <img src="imag/equilibrio.jpeg" alt="Ejercicio de Equilibrio">
+            <div class="slide-caption">
+              <h3>Equilibrio</h3>
+              <p>Mejora tu estabilidad y previene caídas.</p>
+            </div>
+          </div>
+          <div class="slider-slide">
+            <img src="imag/estiramiento.jpeg" alt="Ejercicio de Estiramiento">
+            <div class="slide-caption">
+              <h3>Estiramiento</h3>
+              <p>Mantiene tus músculos flexibles y saludables.</p>
+            </div>
+          </div>
+          <div class="slider-slide">
+            <img src="imag/marcha.jpeg" alt="Ejercicio de Marcha">
+            <div class="slide-caption">
+              <h3>Marcha</h3>
+              <p>Ayuda a mantener la agilidad y el ritmo al caminar.</p>
+            </div>
+          </div>
+          <div class="slider-slide">
+            <img src="imag/levantarse.jpeg" alt="Ejercicio de Levantarse">
+            <div class="slide-caption">
+              <h3>Levantarse</h3>
+              <p>Fortalece las piernas y mejora la independencia.</p>
+            </div>
+          </div>
+        </div>
+        
+        <button class="slider-btn prev-btn" aria-label="Anterior">&#10094;</button>
+        <button class="slider-btn next-btn" aria-label="Siguiente">&#10095;</button>
+
+        <div class="slider-dots">
+          <span class="dot active" data-index="0"></span>
+          <span class="dot" data-index="1"></span>
+          <span class="dot" data-index="2"></span>
+          <span class="dot" data-index="3"></span>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:3rem;">
+        <a href="entrenamiento.html" class="btn btn-primary" style="background:var(--red); padding:1rem 2.5rem; font-size:1.1rem; box-shadow:0 8px 24px rgba(232,67,58,0.4);">
+          &#x1F4BB; Iniciar Evaluación Virtual
+        </a>
+      </div>
+    </div>
+
+    <style>
+      .training-section {
+        padding: 6rem 0;
+      }
+      .slider-container {
+        position: relative;
+        max-width: 800px;
+        margin: 3rem auto 0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(26,58,143,0.15);
+        background: #fff;
+      }
+      .slider-wrapper {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+      }
+      .slider-slide {
+        min-width: 100%;
+        position: relative;
+      }
+      .slider-slide img {
+        width: 100%;
+        height: 450px;
+        object-fit: cover;
+        display: block;
+      }
+      .slide-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(10,18,60,0.95), rgba(10,18,60,0.6), transparent);
+        padding: 3rem 2rem 1.5rem;
+        color: white;
+      }
+      .slide-caption h3 {
+        font-family: var(--font-display);
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+        color: #fff;
+      }
+      .slide-caption p {
+        font-family: var(--font-body);
+        font-size: 1rem;
+        opacity: 0.9;
+        margin: 0;
+      }
+      .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.8);
+        border: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        color: var(--blue-dark);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        z-index: 10;
+      }
+      .slider-btn:hover {
+        background: white;
+        color: var(--red);
+        transform: translateY(-50%) scale(1.05);
+      }
+      .prev-btn { left: 1rem; }
+      .next-btn { right: 1rem; }
+      
+      .slider-dots {
+        position: absolute;
+        bottom: 1.5rem;
+        right: 2rem;
+        display: flex;
+        gap: 8px;
+        z-index: 10;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.4);
+        cursor: pointer;
+        transition: background 0.3s, transform 0.3s;
+      }
+      .dot.active {
+        background: var(--red);
+        transform: scale(1.2);
+      }
+
+      @media (max-width: 768px) {
+        .slider-slide img { height: 300px; }
+        .slide-caption h3 { font-size: 1.4rem; }
+        .slider-btn { width: 36px; height: 36px; font-size: 1rem; }
+      }
+    </style>
+
+    <script>
+      (function() {
+        const wrapper = document.querySelector('.slider-wrapper');
+        const slides = document.querySelectorAll('.slider-slide');
+        const nextBtn = document.querySelector('.next-btn');
+        const prevBtn = document.querySelector('.prev-btn');
+        const dots = document.querySelectorAll('.dot');
+        let currentIndex = 0;
+        let slideInterval;
+
+        function updateSlider() {
+          wrapper.style.transform = `translateX(-${currentIndex * 100}%)`;
+          dots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentIndex);
+          });
+        }
+
+        function nextSlide() {
+          currentIndex = (currentIndex + 1) % slides.length;
+          updateSlider();
+        }
+
+        function prevSlide() {
+          currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+          updateSlider();
+        }
+
+        function setSlide(index) {
+          currentIndex = index;
+          updateSlider();
+          resetInterval();
+        }
+
+        function resetInterval() {
+          clearInterval(slideInterval);
+          slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        nextBtn.addEventListener('click', () => { nextSlide(); resetInterval(); });
+        prevBtn.addEventListener('click', () => { prevSlide(); resetInterval(); });
+        
+        dots.forEach(dot => {
+          dot.addEventListener('click', (e) => {
+            setSlide(parseInt(e.target.dataset.index));
+          });
+        });
+
+        resetInterval();
+      })();
+    </script>
+  </section>
+
   <!-- TEAM -->
   <section class="team-section" id="equipo">
     <div class="container">
